@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  :root {
+    color-scheme: dark;
+    --accent: #5b21b6;        /* dark purple: buttons */
+    --accent-hover: #6d2fd0;
+    --accent-check: #7c3aed;  /* a tick has to stand out on the dark panel */
+  }
+  body {
+    margin: 0; padding: 14px; width: 268px;
+    background: #14141a; color: #e8e8f0;
+    font: 13px/1.45 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  h1 { margin: 0 0 11px; font-size: 13px; font-weight: 600; letter-spacing: .02em; }
+  h1 span { color: #8b8ba7; font-weight: 400; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 7px 0; }
+  label { color: #b8b8cc; font-size: 12.5px; cursor: pointer; user-select: none; }
+  select {
+    background: #21212c; color: #e8e8f0; border: 1px solid #33333f;
+    border-radius: 6px; padding: 4px 6px; font-size: 12px; max-width: 150px;
+  }
+  input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--accent-check); cursor: pointer; }
+  .btn {
+    width: 100%; margin-top: 11px; padding: 9px;
+    background: var(--accent); color: #fff; border: 0; border-radius: 8px;
+    font: 600 13px/1 inherit; cursor: pointer;
+  }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:focus-visible, select:focus-visible, input[type=checkbox]:focus-visible { outline: 2px solid #a78bfa; outline-offset: 2px; }
+  .btn.ghost { background: #21212c; color: #c8c8dc; font-weight: 400; padding: 6px; margin-top: 7px; }
+  .btn.ghost:hover { background: #2a2338; }
+  [hidden] { display: none !important; }
+  .warn {
+    display: none; margin-top: 10px; padding: 8px 10px; border-radius: 7px;
+    background: #3a2418; color: #ffcba4; font-size: 12px;
+  }
+  .warn.on { display: block; }
+  #last { margin-top: 10px; font: 12px/1.4 ui-monospace, Consolas, monospace; color: #8b8ba7; min-height: 1em; }
+  hr { border: 0; border-top: 1px solid #2a2a36; margin: 12px 0 4px; }
+</style>
+</head>
+<body>
+  <h1>ATS Solver <span><span id="hk"></span><span id="ver"></span></span></h1>
+
+  <div class="row"><label for="autoSubmit">Submit automatically</label>
+    <input type="checkbox" id="autoSubmit"></div>
+  <div class="row"><label for="screenshot">Screenshot</label>
+    <select id="screenshot">
+      <option value="auto">Auto (when the question is a picture)</option>
+      <option value="never">Never</option>
+    </select></div>
+
+  <button class="btn" id="runAll" hidden>Solve all courses</button>
+  <button class="btn" id="runOne" hidden>Start and solve this assessment</button>
+  <button class="btn" id="runCourse" hidden>Solve this course</button>
+  <button class="btn" id="run" hidden>Solve the open attempt</button>
+  <button class="btn ghost" id="stop">Stop</button>
+  <button class="btn ghost" id="opts">Options…</button>
+
+  <div class="hint" id="where" style="font-size:12px;margin-top:8px"></div>
+  <div class="hint" id="hint" style="font-size:12px;color:#8b8ba7;margin-top:8px">Auto runs submit each attempt they finish. They skip assignments, essays, matching, ordering and anything with a type they cannot answer, and never open a LockDown Browser or proctored assessment.</div>
+  <div class="warn" id="warn">No API key set. Open Options and paste your key.</div>
+  <div id="last"></div>
+
+  <div id="devbox" hidden>
+    <hr>
+    <div style="font-size:11.5px;color:#8b8ba7">Developer mode. A report is saved whenever a run stops or finds no question; the dump describes this page. Neither contains your key.</div>
+    <button class="btn ghost" id="dump">Dump this page</button>
+    <button class="btn ghost" id="copyReport">Copy the last report</button>
+    <button class="btn ghost" id="saveLog">Save the log as a file…</button>
+  </div>
+
+<script src="debug.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>

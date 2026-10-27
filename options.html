@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ATS Solver — Options</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --accent: #5b21b6;        /* dark purple: buttons */
+    --accent-hover: #6d2fd0;
+    --accent-ring: #8b5cf6;   /* focus outline and links, light enough to read on the dark page */
+    --accent-text: #b79cf7;
+  }
+  body {
+    margin: 0; padding: 32px 24px;
+    background: #14141a; color: #e8e8f0;
+    font: 14px/1.55 -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 560px; margin: 0 auto; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  p.sub { color: #8b8ba7; margin: 0 0 24px; font-size: 13px; }
+  label { display: block; margin: 18px 0 6px; font-size: 13px; color: #b8b8cc; }
+  input, select {
+    width: 100%; box-sizing: border-box;
+    background: #1c1c26; color: #e8e8f0;
+    border: 1px solid #33333f; border-radius: 8px;
+    padding: 10px 12px; font: 13px/1.3 ui-monospace, Consolas, monospace;
+  }
+  input:focus, select:focus { outline: 0; border-color: var(--accent-ring); box-shadow: 0 0 0 3px rgba(139, 92, 246, .25); }
+  [hidden] { display: none !important; }
+  .hint { color: #7a7a94; font-size: 12px; margin-top: 6px; }
+  .hint a { color: var(--accent-text); }
+  h2 { font-size: 14px; margin: 34px 0 4px; color: #e8e8f0; }
+  .keyrow { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .keyrow .name { flex: 1; color: #b8b8cc; font-size: 13px; }
+  .keyrow button { margin: 0; }
+  .keybox {
+    min-width: 150px; padding: 8px 12px; text-align: center;
+    background: #1c1c26; color: #e8e8f0; border: 1px solid #33333f; border-radius: 8px;
+    font: 13px/1.3 ui-monospace, Consolas, monospace;
+  }
+  .keybox:hover { background: #242433; }
+  .keybox.rec { border-color: var(--accent-ring); box-shadow: 0 0 0 3px rgba(139, 92, 246, .25); color: var(--accent-text); }
+  .keybox.unset { color: #7a7a94; }
+  .keyrow .clear { padding: 8px 12px; background: #21212c; color: #c8c8dc; font-weight: 400; }
+  .keyrow .clear:hover { background: #2a2338; }
+  button.ghost.small { margin: 14px 0 0; padding: 7px 14px; font-weight: 400; }
+  .check { display: flex; align-items: center; gap: 10px; margin: 26px 0 0; cursor: pointer; color: #e8e8f0; }
+  .check input { width: 16px; height: 16px; padding: 0; accent-color: #7c3aed; cursor: pointer; }
+  button {
+    margin-top: 26px; padding: 10px 20px;
+    background: var(--accent); color: #fff; border: 0; border-radius: 8px;
+    font: 600 13px/1 inherit; cursor: pointer;
+  }
+  button:hover { background: var(--accent-hover); }
+  button:focus-visible { outline: 2px solid var(--accent-ring); outline-offset: 2px; }
+  button.ghost { background: #21212c; color: #c8c8dc; margin-left: 8px; }
+  button.ghost:hover { background: #2a2338; }
+  #status { margin-top: 14px; font-size: 13px; min-height: 1.4em; }
+  .ok { color: #7ee0a8; } .bad { color: #ff8f8f; }
+  table.speed { width: 100%; border-collapse: collapse; margin-top: 14px; font: 12px/1.4 ui-monospace, Consolas, monospace; }
+  table.speed th, table.speed td { padding: 5px 6px; text-align: right; border-bottom: 1px solid #2a2a36; }
+  table.speed th { color: #8b8ba7; font-weight: 400; }
+  table.speed th:first-child, table.speed td:first-child { text-align: left; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; color: #b8b8cc; }
+  table.speed td.all { color: #e8e8f0; font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <h1>ATS Solver</h1>
+  <p class="sub">Key and model settings. Everything is stored locally in this browser.</p>
+
+  <label for="provider">Which service answers the questions</label>
+  <select id="provider">
+    <option value="openrouter">OpenRouter (one key, many models)</option>
+    <option value="gemini">Google Gemini (your own Google key)</option>
+    <option value="openai">OpenAI, the ChatGPT models (your own OpenAI key)</option>
+    <option value="deepseek">DeepSeek — your own chat.deepseek.com login</option>
+    <option value="gemini-web">Google Gemini — your own gemini.google.com login</option>
+  </select>
+  <div class="hint">Only the one chosen here is used. Each keeps its own key and model below.</div>
+
+  <div id="openrouterFields">
+  <label for="apiKey">OpenRouter API key</label>
+  <input id="apiKey" type="password" placeholder="sk-or-v1-…" autocomplete="off" spellcheck="false">
+  <div class="hint">Get one at <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer">openrouter.ai/keys</a>. Used only to call the model below.</div>
+
+  <label for="model">Model</label>
+  <input id="model" list="models" spellcheck="false">
+  <datalist id="models">
+    <option value="deepseek/deepseek-v4.1-flash">deepseek/deepseek-v4.1-flash — fast, vision, cheap</option>
+    <option value="deepseek/deepseek-v4.1-flash-1017">deepseek/deepseek-v4.1-flash-1017 — pinned</option>
+    <option value="deepseek/deepseek-v4-flash-vision-exp">deepseek/deepseek-v4-flash-vision-exp</option>
+    <option value="openrouter/free">openrouter/free</option>
+    <option value="anthropic/claude-haiku-4.5">anthropic/claude-haiku-4.5</option>
+    <option value="google/gemini-2.5-flash">google/gemini-2.5-flash</option>
+    <option value="openai/gpt-5-mini">openai/gpt-5-mini</option>
+  </datalist>
+  <div class="hint">Anything on OpenRouter works. The model must accept images if you want diagram questions solved.</div>
+
+  <label for="fallbackModel">Fallback model (optional)</label>
+  <input id="fallbackModel" list="models" placeholder="tried if the first one fails" spellcheck="false">
+  <div class="hint">Rate limits and outages happen. Set a second model and the tool retries with it.</div>
+  </div>
+
+  <div id="geminiFields" hidden>
+  <label for="geminiKey">Gemini API key</label>
+  <input id="geminiKey" type="password" placeholder="AIza…" autocomplete="off" spellcheck="false">
+  <div class="hint">Get one at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noreferrer">aistudio.google.com/apikey</a>. It is sent only to Google, in a request header, to call the model below. Check Google’s own page for what it costs and what the limits are.</div>
+
+  <label for="geminiModel">Gemini model</label>
+  <input id="geminiModel" list="geminiModels" spellcheck="false">
+  <datalist id="geminiModels">
+    <option value="gemini-2.5-flash">gemini-2.5-flash — fast, sees images</option>
+    <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite — lighter and cheaper</option>
+    <option value="gemini-2.5-pro">gemini-2.5-pro — slower, for hard questions</option>
+  </datalist>
+  <div class="hint">These are only suggestions. After “Test key” works, this list is replaced by the models your key can actually use. The model must accept images if you want diagram questions solved.</div>
+
+  <label for="geminiFallbackModel">Fallback model (optional)</label>
+  <input id="geminiFallbackModel" list="geminiModels" placeholder="tried if the first one fails" spellcheck="false">
+  <div class="hint">If a model is rate-limited or unavailable, the tool tries this one. A wrong key stops at once, since another model would be refused too.</div>
+  </div>
+
+  <div id="openaiFields" hidden>
+  <label for="openaiKey">OpenAI API key</label>
+  <input id="openaiKey" type="password" placeholder="sk-…" autocomplete="off" spellcheck="false">
+  <div class="hint">Get one at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noreferrer">platform.openai.com/api-keys</a>. This is the developer API, which is billed on its own: a ChatGPT subscription does not include it, and a ChatGPT login will not work here. The key is sent only to OpenAI, to call the model below.</div>
+
+  <label for="openaiModel">OpenAI model</label>
+  <input id="openaiModel" list="openaiModels" spellcheck="false">
+  <datalist id="openaiModels">
+    <option value="gpt-5-mini">gpt-5-mini</option>
+    <option value="gpt-5">gpt-5</option>
+    <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+    <option value="gpt-4o-mini">gpt-4o-mini</option>
+  </datalist>
+  <div class="hint">These are only suggestions. After “Test key” works, this list is replaced by the models your key can actually use. The model must accept images if you want diagram questions solved.</div>
+
+  <label for="openaiFallbackModel">Fallback model (optional)</label>
+  <input id="openaiFallbackModel" list="openaiModels" placeholder="tried if the first one fails" spellcheck="false">
+  <div class="hint">If a model is rate-limited or unavailable, the tool tries this one. A wrong key stops at once, since another model would be refused too.</div>
+  </div>
+
+  <div id="deepseekFields" hidden>
+  <label for="deepseekToken">DeepSeek login token</label>
+  <input id="deepseekToken" type="password" placeholder="paste it, or use the button below" autocomplete="off" spellcheck="false">
+  <div class="hint">Not an API key: this is your own chat.deepseek.com login. Sign in on that site in another tab, then press “Copy token from the site” — it reads the <code>userToken</code> out of that tab and puts it here. It is stored in this browser only, sent to chat.deepseek.com and nowhere else, and stops working when you sign out of the site.</div>
+  <div class="keyrow"><button class="ghost small" id="grabToken" type="button">Copy token from the site</button></div>
+
+  <label for="deepseekModel">DeepSeek model</label>
+  <select id="deepseekModel">
+    <option value="deepseek-chat">deepseek-chat — Instant, fast</option>
+    <option value="deepseek-expert">deepseek-expert — stronger, slower</option>
+  </select>
+  <div class="hint">Instant and Expert are the two the site offers. DeepThink is a switch, below, not a model.</div>
+
+  <label class="check" for="deepseekThinking"><input id="deepseekThinking" type="checkbox"> DeepThink (let it reason before answering)</label>
+  <div class="hint">Slower and better on hard questions, and it burns more of your account's allowance. It also takes longer, so leave it off unless the questions are hard.</div>
+
+  <label class="check" for="deepseekSearch"><input id="deepseekSearch" type="checkbox"> Web search</label>
+  <div class="hint">Lets it search the web before answering. Rarely useful for coursework questions.</div>
+  </div>
+
+  <div id="geminiWebFields" hidden>
+  <div class="hint" style="margin-top:0">This one uses your own signed-in <b>gemini.google.com</b> tab instead of a key you buy. It sends the requests from that tab, because the login only works from there — so the tab has to be open and signed in whenever the tool answers a question. Nothing is copied out of it, and no password or token is stored here. Unlike the DeepSeek option, it can read pictures.</div>
+
+  <label for="geminiWebModel">Gemini model</label>
+  <select id="geminiWebModel">
+    <option value="">The account's default model (recommended)</option>
+  </select>
+  <div class="hint">Left as the default, the site itself picks the model, which is the safest choice and works on every account. Press “Test login” to fill this list with the models your account can actually use, then pick one — some of them (Pro, the higher tiers) only work on a paid account.</div>
+
+  <label for="geminiWebFallbackModel">Fallback model (optional)</label>
+  <select id="geminiWebFallbackModel">
+    <option value="">None</option>
+  </select>
+  <div class="hint">Tried if the first one is out of allowance. The account's limit is shared across its models, so this helps least here — but a different model sometimes still answers.</div>
+
+  <label for="geminiWebThinking">Thinking</label>
+  <select id="geminiWebThinking">
+    <option value="">Standard (default)</option>
+    <option value="low">Low — quickest</option>
+    <option value="medium">Medium</option>
+    <option value="high">Extended — thinks longest</option>
+  </select>
+  <div class="hint">How long it reasons before answering. Higher is slower and uses the account's allowance faster. Leave it on Standard unless you have a reason not to. The site's own levels are these four, and they are not in the order you would guess — Medium is the site's 4 and Extended its 2.</div>
+
+  <div class="keyrow"><button class="ghost small" id="openGemini" type="button">Open gemini.google.com</button></div>
+  </div>
+
+  <div id="chatFields" hidden>
+  <label class="check" for="reuseChat"><input id="reuseChat" type="checkbox"> Keep using one chat</label>
+  <div class="hint">Off (the default): every question gets a fresh chat, so earlier answers cannot sway later ones, and several questions can be asked at once. On: the questions go into one chat, which keeps the site's sidebar tidy but means the chat remembers earlier questions and they are asked one at a time. A new chat is started after 30 questions, and whenever the model or the account changes. Second opinions on a doubtful answer always get a fresh chat. Applies to DeepSeek and the Gemini site login only.</div>
+  <div class="keyrow"><button class="ghost small" id="newChat" type="button">Start a new chat with the next question</button></div>
+  </div>
+
+  <h2>Speed</h2>
+  <div class="hint" style="margin-top:0">Each idea here can be switched off, so the same kind of question can be answered with and without it and the two compared. The table underneath averages the last questions, grouped by which switches were on. A third idea is in the popup: Screenshot → “Smart” takes a picture only when the words are not enough (a figure, a picture answer, a question that is itself a picture, or one that names a passage that was not read), and goes without for an ordinary question. Try it on a lesson and watch whether any answer comes out wrong where the page needed a picture; if so, put it back on Auto.</div>
+
+  <label class="check" for="speedCache"><input id="speedCache" type="checkbox"> Remember the Gemini session between questions</label>
+  <div class="hint">Skips downloading the whole Gemini page and asking for the model list before every question. Kept for ten minutes per tab and account, and dropped and fetched again at once if the site refuses it. Only affects “Google Gemini — your own login”.</div>
+
+  <label class="check" for="speedParallel"><input id="speedParallel" type="checkbox"> Upload the screenshot while the model list loads</label>
+  <div class="hint">Starts the picture upload as soon as the session is known instead of after the model list. With the switch above on, the list is already remembered after the first question, so this only helps that first question and the one after a ten-minute gap; to compare it by itself, switch the one above off. Only affects the Gemini login.</div>
+
+  <div id="speedTable"></div>
+  <div class="keyrow"><button class="ghost small" id="speedRefresh" type="button">Refresh</button><button class="ghost small" id="speedClear" type="button">Clear the log</button></div>
+
+  <label for="answerDelay">Delay after clicking an answer (ms)</label>
+  <input id="answerDelay" type="number" min="0" max="3000" step="20">
+  <div class="hint">Raise this if Submit stays greyed out after picking an answer — the page needs time to register the selection.</div>
+
+  <h2>Shortcuts</h2>
+  <div class="hint">Click a box, then press the keys you want: any key, with or without Ctrl, Alt or Shift. Esc cancels. A plain letter, digit or arrow key is ignored while you are typing in a text field; the rest work anywhere on the page. Press Save to keep them.</div>
+  <div id="keys"></div>
+  <button class="ghost small" id="resetKeys" type="button">Reset shortcuts</button>
+
+  <h2>Developer</h2>
+  <label class="check" for="devMode"><input id="devMode" type="checkbox"> Developer mode</label>
+  <div class="hint">Shows <b>Dump this page</b>, <b>Copy the last report</b> and <b>Save the log as a file</b> in the popup. A report is kept whenever a run stops or the page script finds no question: the page as it was, what the run had done so far, and the last few hundred log lines — which service was picked, which model, what each one replied. Keys and tokens are stripped out of it before it is written, but it does contain the question text from the page, so read it before pasting it in public. Press Save to keep the switch.</div>
+  <div class="keyrow"><button class="ghost small" id="saveLog" type="button">Save the log as a file…</button><button class="ghost small" id="clearLog" type="button">Clear the log</button></div>
+
+  <button id="save">Save</button>
+  <button class="ghost" id="test">Test key</button>
+  <div id="status"></div>
+</main>
+<script src="debug.js"></script>
+<script src="options.js"></script>
+</body>
+</html>

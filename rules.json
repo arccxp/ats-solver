@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        { "header": "origin", "operation": "set", "value": "https://chat.deepseek.com" },
+        { "header": "referer", "operation": "set", "value": "https://chat.deepseek.com/" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "https://chat.deepseek.com/api/",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        { "header": "origin", "operation": "set", "value": "https://gemini.google.com" },
+        { "header": "referer", "operation": "set", "value": "https://gemini.google.com/" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "https://content-push.googleapis.com/",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]

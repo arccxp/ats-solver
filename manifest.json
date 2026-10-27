@@ -1,0 +1,65 @@
+{
+  "manifest_version": 3,
+  "name": "ATS Solver",
+  "version": "0.1.0",
+  "description": "Finds and answers tests on ats.blackboard.com (Blackboard Ultra) with an AI model.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab",
+    "scripting",
+    "declarativeNetRequestWithHostAccess"
+  ],
+  "host_permissions": [
+    "https://openrouter.ai/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.openai.com/*",
+    "https://chat.deepseek.com/*",
+    "https://gemini.google.com/*",
+    "https://content-push.googleapis.com/*",
+    "https://ats.blackboard.com/*"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "provider-headers",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://gemini.google.com/*"
+      ],
+      "js": [
+        "debug.js",
+        "gemini-web.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://ats.blackboard.com/*"
+      ],
+      "js": [
+        "debug.js",
+        "ats.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ATS Solver"
+  },
+  "options_page": "options.html"
+}
