@@ -227,11 +227,11 @@ def test_answered_attempt_with_no_usable_submit_button_says_so(open_env):
 def test_retry_message_shows_the_models_reason_and_does_not_claim_a_rate_limit(open_env):
     env = open_env(
         _one_short(),
-        script=[{"reply": {"error": "empty reply (finish_reason=stop)"}, "times": 1},
+        script=[{"reply": {"error": "empty reply (finish_reason=rate_limit_reached)"}, "times": 1},
                 {"match": "France", "reply": {"words": ["Paris"]}}],
-        store={"rateWait": 400},
+        store={"rateWait": 3000},
     )
     env.call("do-solve")
-    env.wait_hud(r"did not answer \(empty reply \(finish_reason=stop\)\)", timeout=10000)
+    env.wait_hud(r"did not answer \(empty reply \(finish_reason=rate_limit_reached\)\)", timeout=10000)
     assert "rate limited" not in env.hud().lower()
     env.wait_hud(r"answered 1/1", timeout=20000)
